@@ -171,7 +171,7 @@ if __name__ == '__main__':
     USERNAME = 'ariq'
     PASSWORD = 'root'
     server = CustomHTTPServer(('localhost', PORT))
-    server.socket = ssl.wrap_socket(server.socket, keyfile='private.key', certfile='certificate.cert', server_side=True)
+    server.socket = ssl.wrap_socket(server.socket, keyfile='private-key.key', certfile='csr.txt', server_side=True)
     server.set_auth(USERNAME, PASSWORD)
     print('Serving at', PORT)
     server.serve_forever()
