@@ -1,2 +1,3 @@
 # Loot Box API
-Repository Teknologi Sistem Terintegrasi 
+Teknologi Sistem Terintegrasi 
+Ariq Radhitama Ariasatya - 18217017
