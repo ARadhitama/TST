@@ -20,3 +20,15 @@ $ venv\Scripts\> activate
 # leaving venv
 (venv) $ deactivate
 ```
+
+## Database
+
+```bash
+# create database
+(mariadb) $ CREATE DATABASE lootbox;
+
+# create table
+(mariadb) $ CREATE TABLE box (idBOX INT NOT NULL PRIMARY KEY, name VARCHAR(10) NOT NULL);
+(mariadb) $ CREATE TABLE items (itemName VARCHAR(20) NOT NULL PRIMARY KEY, persentase INT NOT NULL);
+(mariadb) $ CREATE TABLE box_items (id INT NOT NULL, name VARCHAR(20) NOT NULL, PRIMARY KEY(id,name));
+```
