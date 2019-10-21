@@ -28,7 +28,6 @@ $ venv\Scripts\> activate
 (mariadb) $ CREATE DATABASE lootbox;
 
 # create table
-(mariadb) $ CREATE TABLE box (idBOX INT NOT NULL PRIMARY KEY, name VARCHAR(10) NOT NULL);
-(mariadb) $ CREATE TABLE items (itemName VARCHAR(20) NOT NULL PRIMARY KEY, persentase INT NOT NULL);
-(mariadb) $ CREATE TABLE box_items (id INT NOT NULL, name VARCHAR(20) NOT NULL, PRIMARY KEY(id,name));
+(mariadb) $ CREATE TABLE box (idBox VARCHAR(255) NOT NULL PRIMARY KEY, name VARCHAR(255) NOT NULL);
+(mariadb) $ CREATE TABLE items (idItem VARCHAR(255) NOT NULL PRIMARY KEY, itemName VARCHAR(255) NOT NULL, percentage INT NOT NULL, FOREIGN KEY (idBox) REFERENCES box(idBox));
 ```
