@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, jsonify
+import pymysql
+from flask import Flask, request, jsonify
 from flaskext.mysql import MySQL
 app = Flask(__name__)
 import request
@@ -16,45 +17,90 @@ def response_api(data):
         data['code']
     )
 
-@app.errorhandler(x)
+@app.errorhandler(400)
 def bad_request(e):
     return response_api({
+        'code' : 400,
+        'message' : 'Kesalahan dalam melakukan request',
+        'data' : None
+    })
 
+@app.errorhandler(500)
+def internal_server_error(e):
+    return response_api({
+        'code' : 500,
+        'message' : 'Gangguan dalam server',
+        'data' : None
     })
 
 @app.route('/')
 def root():
     return 'API using Flask'
 
-@app.route('/lootbox', methods =['POST'])
+@app.route('/lootbox', methods =['POST', 'PUT'])
 def lootbox():
-    conn = mysql.connect()
-    cursor = conn.cursor()
-
-@app.route('/lootbox/<idBox>', methods =['GET', 'PUT'])
-global conn, cursor
+    if request.method == 'POST':
+        try:
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            _name = request.args.get('name')
+            _items = request.args.get('items')
+            sql = "INSERT INTO items(itemName, percentage) VALUES (%s,%s)"
+            for x in _items:
+                data = (x.itemName,x.percentage)
+                cursor.execute(sql, data)
+            conn.commit()
+            _id = "SELECT idBox FROM box ORDER BY idBox DESC LIMIT 1"
+            res = {
+                'message' : 'Success',
+                'id' : _id
+            }
+            return res
+        except Exception as e:
+            return e
+        finally:
+            cursor.close()
+            conn.close()
+    elif request.method == 'PUT' :
+        try:
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            _id = request.args.get('idBox')
+            _items = request.args.get('items')
+            cursor.execute("DELETE FROM items WHERE id=%s",idBox)
+            sql = "INSERT INTO items(itemName, percentage) VALUES (%s,%s)"
+            for x in _items:
+                data = (x.itemName,x.percentage)
+                cursor.execute(sql, data)
+            conn.commit()
+        except Exception as e:
+            return e
+        finally:
+            cursor.close()
+            conn.close()
+    
+@app.route('/lootbox/<idBox>', methods =['GET'])
 def lootbox(idBox):
-    conn = mysql.connect()
-    cursor = conn.cursor()
-    if request.method == 'GET' :
+    try:
+        conn = mysql.connect()
+        cursor = conn.cursor()
         sql = "SELECT itemName, percentage FROM items WHERE idbox=%s"
         cursor.execute(sql,idBox)
         conn.commit()
         res = cursor.fetchall()
-    elif request.method == 'PUT' :
-        cursor.execute("DELETE FROM items WHERE id=%s",idBox)
-        sql = 
-        data = ""
-
+        return response_api(res)
+    except Exception as e:
+        return e
+    finally:
+        cursor.close()
+        conn.close()
 
 @app.route('/item/<int:idBox>', methods =['GET'])
-global conn, cursor
 def item(idBox):
     conn = mysql.connect()
     cursor = conn.cursor()
-    sql = 
     data =  request.args.get('idBox')
     cursor.execute(sql,data)
 
-if __name__ = "__main__":
-    app.run(ssl_context=('csr.txt','private-key.key', debug=True))  
+if __name__ == "__main__":
+    app.run(ssl_context=('csr.txt','private-key.key'))  
